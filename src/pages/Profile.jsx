@@ -24,7 +24,7 @@ const Profile = () => {
         setFormData(prevState => ({...prevState, [e.target.id]: e.target.value}));
     }
 
-    async function handleOnSubmit() {
+    async function handleOnSubmit(e) {
         try {
             if (auth.currentUser.displayName !== name) {
                 await updateProfile(auth.currentUser, {
@@ -34,8 +34,8 @@ const Profile = () => {
                 await updateDoc(docRef, {
                     name: name,
                 });
+                toast.success("Name updated successfully");
             }
-            toast.success("Name updated successfully");
         } catch (e) {
             console.log(e)
             toast.error("Name could not be updated");
