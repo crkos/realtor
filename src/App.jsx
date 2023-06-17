@@ -25,7 +25,10 @@ function App() {
                         <Route path="/profile" element={<Profile/>}/>
                     </Route>
                     <Route path="/offers" element={<Offers/>}/>
-                    <Route path="/create-listing" element={<CreateListing/>}/>
+                    <Route path="/create-listing" element={<PrivateRoute/>}>
+                        <Route path="/create-listing" element={<CreateListing/>}/>
+                    </Route>
+
 
                 </Routes>
                 <ToastContainer
