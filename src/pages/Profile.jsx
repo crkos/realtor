@@ -3,7 +3,7 @@ import {getAuth, updateProfile} from "firebase/auth";
 import {useNavigate} from "react-router";
 import {toast} from "react-toastify";
 import {db} from "../firebase.js";
-import {collection, doc, updateDoc, query, where, orderBy, getDocs} from "firebase/firestore";
+import {collection, doc, updateDoc, query, where, orderBy, getDocs, deleteDoc} from "firebase/firestore";
 import {FcHome} from "react-icons/fc";
 import {Link} from "react-router-dom";
 import ListingItem from "../components/ListingItem.jsx";
@@ -23,6 +23,19 @@ const Profile = () => {
     async function handleOnLogout() {
         await auth.signOut();
         navigate("/");
+    }
+
+    function handleOnEdit(listingId) {
+        navigate(`/edit-listing/${listingId}`);
+    }
+
+    async function handleOnDelete(listingId) {
+        if (window.confirm("Are you sure you want to delete this listing?")) {
+            await deleteDoc(doc(db, "listings", listingId));
+            const updateListings = listings.filter(listing => listing.id !== listingId);
+            setListings(updateListings);
+            toast.success("Listing deleted successfully");
+        }
     }
 
     function handleOnChange(e) {
@@ -110,7 +123,10 @@ const Profile = () => {
                                 <ListingItem
                                     key={listing.id}
                                     listing={listing.data}
-                                    id={listing.id}/>
+                                    id={listing.id}
+                                    onDelete={() => handleOnDelete(listing.id)}
+                                    onEdit={() => handleOnEdit(listing.id)}
+                                />
 
                             ))
                             }

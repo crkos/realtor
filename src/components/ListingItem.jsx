@@ -2,11 +2,12 @@ import PropTypes from "prop-types";
 import {Link} from "react-router-dom";
 import {formatDistance} from "date-fns";
 import {Timestamp} from "firebase/firestore";
-import {MdLocationOn} from "react-icons/md";
+import {MdLocationOn, MdEdit} from "react-icons/md";
 import {priceFormatter} from "../utils/priceFormatter.js";
+import {FaTrash} from "react-icons/fa";
 
 
-const ListingItem = ({listing, id}) => {
+const ListingItem = ({listing, id, onDelete, onEdit}) => {
     const t = Timestamp.fromDate(new Date());
     const d = t.toDate();
     return (
@@ -35,13 +36,19 @@ const ListingItem = ({listing, id}) => {
                     </div>
                 </div>
             </Link>
+            {onDelete ? <FaTrash className="absolute bottom-2 right-2 cursor-pointer h-[14px] text-red-500"
+                                 onClick={() => onDelete(id)}/> : null}
+            {onEdit ? <MdEdit className="absolute bottom-2 right-7 cursor-pointer h-[14px]"
+                              onClick={() => onEdit(id)}/> : null}
         </li>
     );
 };
 
 ListingItem.propTypes = {
     listing: PropTypes.object.isRequired,
-    id: PropTypes.string
+    id: PropTypes.string,
+    onEdit: PropTypes.func,
+    onDelete: PropTypes.func
 };
 
 export default ListingItem;
