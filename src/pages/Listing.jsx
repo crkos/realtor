@@ -10,7 +10,6 @@ import {FaShare, FaMapMarkerAlt, FaBed, FaBath, FaParking, FaChair} from "react-
 import {priceFormatter} from "../utils/priceFormatter.js";
 import {getAuth} from "firebase/auth";
 import Contact from "../components/Contact.jsx";
-import {list} from "postcss";
 import {MapContainer, Marker, Popup, TileLayer} from "react-leaflet";
 
 const Listing = () => {
