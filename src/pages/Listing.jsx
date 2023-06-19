@@ -6,11 +6,13 @@ import Spinner from "../components/Spinner.jsx";
 import {Swiper, SwiperSlide} from 'swiper/react';
 import SwiperCore, {EffectFade, Pagination, Navigation, Autoplay} from 'swiper';
 import 'swiper/css/bundle';
-import {FaShare} from "react-icons/fa";
+import {FaShare, FaMapMarkerAlt, FaBed, FaBath, FaParking, FaChair} from "react-icons/fa";
+import {priceFormatter} from "../utils/priceFormatter.js";
+import {list} from "postcss";
 
 const Listing = () => {
     const params = useParams();
-    const [listings, setListings] = useState(null);
+    const [listing, setListing] = useState(null);
     const [loading, setLoading] = useState(true);
     const [shareLinkCopied, setShareLinkCopied] = useState(false);
     SwiperCore.use([EffectFade, Pagination, Navigation, Autoplay]);
@@ -19,7 +21,7 @@ const Listing = () => {
             const docRef = doc(db, "listings", params.listingId);
             const docSnap = await getDoc(docRef);
             if (docSnap.exists()) {
-                setListings(docSnap.data());
+                setListing(docSnap.data());
                 setLoading(false);
             }
         }
@@ -33,12 +35,12 @@ const Listing = () => {
         <main>
             <Swiper slidesPerView={1} navigation pagination={{type: "progressbar"}} effect="fade"
                     modules={[EffectFade]} autoplay={{delay: 3000}}>
-                {listings.imgUrls.map((url, index) => {
+                {listing.imgUrls.map((url, index) => {
                     return (
                         <SwiperSlide key={index}>
                             <div className="w-full overflow-hidden h-[300px] relative"
                                  style={{
-                                     background: `url(${listings.imgUrls[index]}) center no-repeat`,
+                                     background: `url(${listing.imgUrls[index]}) center no-repeat`,
                                      backgroundSize: 'cover'
                                  }}>
 
@@ -65,6 +67,43 @@ const Listing = () => {
                 <p className="fixed top-[23%] right-[5%] font-semibold border-2 border-gray-400 rounded-md bg-white z-10 p-2">Link
                     Copied!</p>
             ) : null}
+            <div
+                className="m-4 flex flex-col md:flex-row max-w-6xl lg:mx-auto p-4 rounded-lg shadow-lg bg-white md:space-x-3 lg:space-x-5">
+                <div className="w-full h-[200px] lg:h-[400px]">
+                    <p className="text-2xl font-bold mb-3 text-blue-900">{listing.name} - {priceFormatter.format(listing.offer ? listing.discountedPrice : listing.regularPrice)} {listing.type === "rent" ? "/ month" : null}</p>
+                    <p className="flex items-center mt-6 mb-3 font-semibold"><FaMapMarkerAlt
+                        className="text-green-700 mr-1"/>{listing.address}</p>
+                    <div className="flex justify-start items-center space-x-4 w-[75%]">
+                        <p className="bg-red-800 w-full max-w-[200px] rounded-md p-1 text-white text-center font-semibold shadow-md">{listing.type === "rent" ? "Rent" : "Sale"}</p>
+                        <p className="w-full max-w-[200px] bg-green-800 rounded-md p-1 text-white text-center font-semibold shadow-md">{listing.offer ?
+                            <p>
+                                {priceFormatter.format(listing.regularPrice - listing.discountedPrice)} Discount
+                            </p> : <p>{priceFormatter.format(listing.regularPrice)} </p>}
+                        </p>
+                    </div>
+                    <p className="mb-3 mt-3 "><span className="font-semibold">Description - </span>{listing.description}
+                    </p>
+                    <ul className="flex items-center space-x-4 text-sm font-semibold sm:space-x-10">
+                        <li className="flex items-center whitespace-nowrap">
+                            <FaBed
+                                className="mr-1 text-lg"/>{listing.bedrooms > 1 ? `${listing.bedrooms} Beds` : `${listing.bedrooms} Bed`}
+                        </li>
+                        <li className="flex items-center whitespace-nowrap">
+                            <FaBath
+                                className="mr-1 text-lg"/>{listing.bathrooms > 1 ? `${listing.bedrooms} Baths` : `${listing.bedrooms} Bath`}
+                        </li>
+                        <li className="flex items-center whitespace-nowrap">
+                            <FaParking
+                                className="mr-1 text-lg"/>{listing.parking ? "Parking spot" : "No parking"}
+                        </li>
+                        <li className="flex items-center whitespace-nowrap">
+                            <FaChair
+                                className="mr-1 text-lg"/>{listing.furnished ? "Furnished" : "Not furnished"}
+                        </li>
+                    </ul>
+                </div>
+                <div className="bg-blue-300 w-full h-[200px] lg:h-[400px] overflow-x-hidden"></div>
+            </div>
         </main>
     );
 };
