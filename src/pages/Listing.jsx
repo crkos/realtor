@@ -10,6 +10,8 @@ import {FaShare, FaMapMarkerAlt, FaBed, FaBath, FaParking, FaChair} from "react-
 import {priceFormatter} from "../utils/priceFormatter.js";
 import {getAuth} from "firebase/auth";
 import Contact from "../components/Contact.jsx";
+import {list} from "postcss";
+import {MapContainer, Marker, Popup, TileLayer} from "react-leaflet";
 
 const Listing = () => {
     const params = useParams();
@@ -78,7 +80,7 @@ const Listing = () => {
                         className="text-green-700 mr-1"/>{listing.address}</p>
                     <div className="flex justify-start items-center space-x-4 w-[75%]">
                         <p className="bg-red-800 w-full max-w-[200px] rounded-md p-1 text-white text-center font-semibold shadow-md">{listing.type === "rent" ? "Rent" : "Sale"}</p>
-                        <p className="w-full max-w-[200px] bg-green-800 rounded-md p-1 text-white text-center font-semibold shadow-md">{listing.offer ?
+                        <p className="w-full max-w-[200px] bg-green-800 rounded-md p-1 text-white text-center font-semibold shadow-md whitespace-nowrap">{listing.offer ?
                             <span>
                                 {priceFormatter.format(listing.regularPrice - listing.discountedPrice)} Discount
                             </span> : <p>{priceFormatter.format(listing.regularPrice)} </p>}
@@ -86,22 +88,22 @@ const Listing = () => {
                     </div>
                     <p className="mb-3 mt-3 "><span className="font-semibold">Description - </span>{listing.description}
                     </p>
-                    <ul className="flex items-center space-x-4 text-sm font-semibold sm:space-x-10">
+                    <ul className="flex items-center justify-center md:justify-start space-x-4 text-sm font-semibold sm:space-x-10">
                         <li className="flex items-center whitespace-nowrap">
                             <FaBed
-                                className="mr-1 text-lg"/>{listing.bedrooms > 1 ? `${listing.bedrooms} Beds` : `${listing.bedrooms} Bed`}
+                                className="mr-0 text-xs md:text-lg"/>{listing.bedrooms > 1 ? `${listing.bedrooms} Beds` : `${listing.bedrooms} Bed`}
                         </li>
                         <li className="flex items-center whitespace-nowrap">
                             <FaBath
-                                className="mr-1 text-lg"/>{listing.bathrooms > 1 ? `${listing.bedrooms} Baths` : `${listing.bedrooms} Bath`}
+                                className="mr-0 text-xs md:text-lg"/>{listing.bathrooms > 1 ? `${listing.bedrooms} Baths` : `${listing.bedrooms} Bath`}
                         </li>
                         <li className="flex items-center whitespace-nowrap">
                             <FaParking
-                                className="mr-1 text-lg"/>{listing.parking ? "Parking spot" : "No parking"}
+                                className="mr-0 text-xs md:text-lg"/>{listing.parking ? "Parking spot" : "No parking"}
                         </li>
                         <li className="flex items-center whitespace-nowrap">
                             <FaChair
-                                className="mr-1 text-lg"/>{listing.furnished ? "Furnished" : "Not furnished"}
+                                className="mr-0 text-xs md:text-lg"/>{listing.furnished ? "Furnished" : "Not furnished"}
                         </li>
                     </ul>
                     {listing.userRef !== auth.currentUser?.uid && !contactLandLord ? <div className="mt-6">
@@ -112,10 +114,24 @@ const Listing = () => {
                             landlord
                         </button>
                     </div> : null}
-                    {contactLandLord ? <Contact listing={listing} userRef={listing.userRef}/> : null}
+                    {contactLandLord && listing.userRef !== auth.currentUser?.uid ?
+                        <Contact listing={listing} userRef={listing.userRef}/> : null}
 
                 </div>
-                <div className="bg-blue-300 w-full h-[200px] lg:h-[400px] overflow-x-hidden"></div>
+                <div className="w-full h-[200px] md:h-[400px] overflow-x-hidden mt-6 lg:mt-0">
+                    <MapContainer center={[listing.geolocation.lat, listing.geolocation.lng]} zoom={13}
+                                  scrollWheelZoom={false} style={{height: "100%", width: "100%"}}>
+                        <TileLayer
+                            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                        />
+                        <Marker position={[listing.geolocation.lat, listing.geolocation.lng]}>
+                            <Popup>
+                                A pretty CSS3 popup. <br/> Easily customizable.
+                            </Popup>
+                        </Marker>
+                    </MapContainer>
+                </div>
             </div>
         </main>
     );
