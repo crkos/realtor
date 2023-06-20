@@ -12,6 +12,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import CreateListing from "./pages/CreateListing.jsx";
 import EditListing from "./pages/EditListing.jsx";
 import Listing from "./pages/Listing.jsx";
+import Category from "./pages/Category.jsx";
 
 function App() {
     return (
@@ -36,6 +37,7 @@ function App() {
                     <Route>
                         <Route path="category/:categoryName/:listingId" element={<Listing/>}/>
                     </Route>
+                    <Route path="/category/:categoryName" element={<Category/>}/>
                 </Routes>
                 <ToastContainer
                     position="bottom-center"
