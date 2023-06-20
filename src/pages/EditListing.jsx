@@ -316,7 +316,8 @@ const EditListing = () => {
                         <div>
                             <p className="text-lg font-semibold">Discounted price</p>
                             <div className="flex items-center justify-center space-x-6">
-                                <input type="number" id="discountedPrice" value={discountedPrice} min="50"
+                                <input type="number" id="discountedPrice" value={discountedPrice}
+                                       defaultValue={discountedPrice} min="50"
                                        max="400000000"
                                        required={offer}
                                        className="w-full px-4 py-2 text-xl text-gray-700 bg-white border border-gray-300 rounded transition duration-200 ease-in-out focus:text-gray-700 focus:bg-white focus:border-slate-600 text-center"
