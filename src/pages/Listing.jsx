@@ -28,10 +28,13 @@ const Listing = () => {
                 setListing(docSnap.data());
                 setLoading(false);
             }
+            setLoading(false);
         }
 
         fetchListing();
     }, [params.listingId]);
+
+    if (listing === null) return <p className="font-bold text-2xl mt-12 text-center">Listing not found</p>;
 
     if (loading) return <Spinner/>;
 
