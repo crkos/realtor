@@ -6,12 +6,12 @@ import {getFirestore} from "firebase/firestore";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-    apiKey: "AIzaSyCyhxqHhI_jpLRqQo7DisnFY4waI8F2HGk",
-    authDomain: "realtor-react-bca8d.firebaseapp.com",
-    projectId: "realtor-react-bca8d",
-    storageBucket: "realtor-react-bca8d.appspot.com",
-    messagingSenderId: "45018386204",
-    appId: "1:45018386204:web:9d8d59f1fbe0e886ca34d9"
+    apiKey: import.meta.env.VITE_FIREBASE_BROWSER_API_KEY,
+    authDomain: import.meta.env.VITE_AUTH_DOMAIN,
+    projectId: import.meta.env.VITE_PROJECT_ID,
+    storageBucket: import.meta.env.VITE_STORAGE_BUCKET,
+    messagingSenderId: import.meta.env.VITE_MESSAGE_SENDER_ID,
+    appId: import.meta.env.VITE_APP_ID
 };
 
 // Initialize Firebase
